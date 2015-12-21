@@ -3,9 +3,9 @@
 __author__ = 'xieyajie'
 
 import io
-from EMPyClient import *
+from easemob.EMPyClient import *
 
-DEFAULT_ID= 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
+DEFAULT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
 DEFAULT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
 DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
 DEFAULT_REST = 'https://a1.easemob.com'

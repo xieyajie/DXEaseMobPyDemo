@@ -2,12 +2,12 @@
 
 __author__ = 'xieyajie'
 
-import EMHttpRequest
-from EMHttpResponse import *
+from model import DXRequest
 
-BASE_HEADER = {'Content-Type': 'application/json', 'Accept': 'application/json'}
+BASE_HEADERS = {'Content-Type': 'application/json',
+               'Accept': 'application/json'}
 
-class EMPyClient:
+class EMPyClient(object):
 
     def __init__(self, aAppkey, aRestBaseUrl):
         self.appkey = aAppkey
@@ -23,7 +23,7 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users'
         body = {'username': aUsername, 'password': aPassword}
-        response = EMHttpRequest.httpRequest(url, BASE_HEADER, body, 'PUT')
+        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'PUT')
         if response.code != 0:
             print('\n Create %s failed:%s' %(aUsername, response.data))
 
@@ -36,7 +36,7 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/token'
         body = {'grant_type': 'password', 'username': aUsername, 'password': aPassword}
-        response = EMHttpRequest.httpRequest(url, BASE_HEADER, body, 'POST')
+        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'POST')
         if response.code == 0:
             self.username = aUsername
             self.password = aPassword
@@ -56,7 +56,7 @@ class EMPyClient:
         body = {'grant_type': 'client_credentials',
                 'client_id': aID,
                 'client_secret': aSecret}
-        response = EMHttpRequest.httpRequest(url, BASE_HEADER, body, 'POST')
+        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'POST')
         if response.code == 0:
             self.clientId = aID
             self.clientSecret = aSecret
@@ -75,8 +75,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/contacts/users'
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'GET')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'GET')
         if response.code == 0:
             contacts = response.data['data']
             return contacts
@@ -91,8 +91,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/blocks/users'
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'GET')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'GET')
         if response.code == 0:
             blacks = response.data['data']
             return blacks
@@ -111,8 +111,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/contacts/users/' + aUsername
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, aBody, aMethod)
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, aBody, aMethod)
         return response
 
     def addUser(self, aUsername):
@@ -138,9 +138,9 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/blocks/users'
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
+        headers.update(BASE_HEADERS)
         body = dict({'usernames': [aUsername]})
-        response = EMHttpRequest.httpRequest(url, headers, body, 'POST')
+        response = DXRequest.httpRequest(url, headers, body, 'POST')
 
         if response.code != 0:
             print('block user failed:%s' %(response.data))
@@ -157,8 +157,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/blocks/users/' + aUsername
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'DELETE')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'DELETE')
 
         if response.code != 0:
             print('unblock user failed:%s' %(response.data))
@@ -176,7 +176,7 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/chatgroups'
         headers = dict({'Authorization': self.adminRestToken})
-        headers.update(BASE_HEADER)
+        headers.update(BASE_HEADERS)
 
         body = {'groupname':aSubject,
                 'desc':aDescribe,
@@ -187,7 +187,7 @@ class EMPyClient:
         if aMembers != None and len(aMembers):
             body.update({'members':aMembers})
 
-        response = EMHttpRequest.httpRequest(url, headers, body, 'POST')
+        response = DXRequest.httpRequest(url, headers, body, 'POST')
 
         if response.code != 0:
             print('create group failed:%s' %(response.data))
@@ -204,8 +204,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/chatgroups/' + aGroupId
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'DELETE')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'DELETE')
 
         if response.code != 0:
             print('delete group failed:%s' %(response.data))
@@ -218,8 +218,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/users/' + self.username + '/joined_chatgroups'
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'GET')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'GET')
         groups = response.data['data']
 
         if response.code != 0:
@@ -237,8 +237,8 @@ class EMPyClient:
 
         url = self.restBaseUrl + '/chatgroups/' + aGroupId
         headers = dict({'Authorization': self.restToken})
-        headers.update(BASE_HEADER)
-        response = EMHttpRequest.httpRequest(url, headers, None, 'GET')
+        headers.update(BASE_HEADERS)
+        response = DXRequest.httpRequest(url, headers, None, 'GET')
         groups = response.data['data']
 
         if response.code != 0:
