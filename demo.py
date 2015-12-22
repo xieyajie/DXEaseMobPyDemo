@@ -3,7 +3,7 @@
 __author__ = 'xieyajie'
 
 import io
-from easemob.em_client import *
+from easemob.emclient import *
 
 DEFAULT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
 DEFAULT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
@@ -16,39 +16,39 @@ class Demo:
         if op == 1:
             username = input('username:')
             password = input('password:')
-            self.client_.create_new_user(username, password)
+            self.client.create_new_user(username, password)
         elif op == 2:
             username = input('username:')
             password = input('password:')
-            self.client_.get_user_token(username, password)
+            self.client.get_user_token(username, password)
         elif op == 3:
-            id = input('client_id:')
-            if len(id) == 0:
-                id = DEFAULT_ID
+            client_id = input('client_id:')
+            if len(client_id) == 0:
+                client_id = DEFAULT_ID
 
             secret = input('client_secret:')
             if len(secret) == 0:
                 secret = DEFAULT_SECRET
 
-            self.client_.get_admin_token(id, secret)
+            self.client.get_admin_token(client_id, secret)
         elif op == 4:
-            self.client_.get_contacts()
+            self.client.get_contacts()
         elif op == 5:
-            self.client_.get_black_contacts()
+            self.client.get_black_contacts()
         elif op == 6:
             username = input('username:')
-            self.client_.add_user(username)
+            self.client.add_user(username)
         elif op == 7:
             username = input('username:')
-            self.client_.delete_user(username)
+            self.client.delete_user(username)
         elif op == 8:
             username = input('username:')
-            self.client_.add_user_to_black(username)
+            self.client.add_user_to_black(username)
         elif op == 9:
             username = input('username:')
-            self.client_.remove_user_from_black(username)
+            self.client.remove_user_from_black(username)
         elif op == 10:
-            self.client_.get_current_user_groups()
+            self.client.get_current_user_groups()
         elif op == 11:
             subject = input('群主题:')
             des = input('群描述:')
@@ -72,10 +72,11 @@ class Demo:
                     is_approval = bool(tmp)
 
 
-            self.client_.create_group(subject, des, max_users, members, is_public, is_approval)
+            self.client.create_group(subject, des, max_users,
+                                     members, is_public, is_approval)
         elif op == 12:
             group_id = input('要退出的群组ID:')
-            self.client_.exit_group(group_id)
+            self.client.exit_group(group_id)
         elif op == 13:
             group_id = input('群组ID:')
 
@@ -92,29 +93,29 @@ class Demo:
             if len(tmp):
                 max_users = int(tmp)
 
-            self.client_.edit_group_info(group_id, subject, des, max_users)
+            self.client.edit_group_info(group_id, subject, des, max_users)
         elif op == 14:
             group_id = input('群组ID:')
-            self.client_.get_group_members(group_id)
+            self.client.get_group_members(group_id)
         elif op == 15:
             group_id = input('群组ID:')
             username = input('要添加成员username:')
-            self.client_.add_group_member(group_id, username)
+            self.client.add_group_member(group_id, username)
         elif op == 16:
             group_id = input('群组ID:')
             username = input('要删除成员username:')
-            self.client_.delete_group_member(group_id, username)
+            self.client.delete_group_member(group_id, username)
         elif op == 17:
             group_id = input('群组ID:')
-            self.client_.get_group_blacks(group_id)
+            self.client.get_group_blacks(group_id)
         elif op == 18:
             group_id = input('群组ID:')
             username = input('要加入群组黑名单的username:')
-            self.client_.add_user_to_group_block(group_id, username)
+            self.client.add_user_to_group_block(group_id, username)
         elif op == 19:
             group_id = input('群组ID:')
             username = input('要移出群组黑名单的username:')
-            self.client_.remove_user_from_group_block(group_id, username)
+            self.client.remove_user_from_group_block(group_id, username)
         # elif op == 20:
         # elif op == 21:
         # elif op == 22:
@@ -151,7 +152,7 @@ class Demo:
         if rest.endswith('/'):
             rest = rest[:(len(rest) - 1)]
 
-        self.client_ = PyClient(appkey, rest + '/' + appkey.replace('#', '/', 1))
+        self.client = PyClient(appkey, rest + '/' + appkey.replace('#', '/', 1))
 
         op = 1
         while op:

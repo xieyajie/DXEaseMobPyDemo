@@ -1,29 +1,29 @@
-#coding = 'utf-8'
-
-__author__ = 'xieyajie'
+# coding = 'utf-8'
 
 import json
 import urllib.request
 import urllib.parse
-from model.dx_response import *
+import urllib.error
+from model.dxresponse import *
+
 
 def http_request(url, headers, parameters, method):
     if len(url) == 0:
         return ''
 
-    bodyData = None
-    if parameters != None and len(parameters) > 0:
+    body_data = None
+    if parameters is not None and len(parameters) > 0:
         if 'Content-Type' in headers:
-            contentType = headers['Content-Type']
-            if contentType == 'application/json':
-                bodyData = json.dumps(parameters).encode('utf-8')
+            content_type = headers['Content-Type']
+            if content_type == 'application/json':
+                body_data = json.dumps(parameters).encode('utf-8')
         else:
-            bodyData = urllib.parse.urlencode(parameters).encode('utf-8')
+            body_data = urllib.parse.urlencode(parameters).encode('utf-8')
 
-    req = urllib.request.Request(url, bodyData, headers, method)
+    req = urllib.request.Request(url, body_data, headers, method)
 
     if method == 'PUT' or method == 'DELETE':
-        req.get_method = lambda:method
+        req.get_method = lambda: method
 
     code = 0
     des = ''
@@ -47,14 +47,18 @@ def http_request(url, headers, parameters, method):
     tmp = DXResponse(code, des, respdata)
     return tmp
 
-def get(url, headers, parameters = None):
+
+def get(url, headers, parameters=None):
     return http_request(url, headers, parameters, 'GET')
 
-def post(url, headers, parameters = None):
+
+def post(url, headers, parameters=None):
     return http_request(url, headers, parameters, 'POST')
 
-def put(url, headers, parameters = None):
+
+def put(url, headers, parameters=None):
     return http_request(url, headers, parameters, 'PUT')
 
-def delete(url, headers, parameters = None):
+
+def delete(url, headers, parameters=None):
     return http_request(url, headers, parameters, 'DELETE')
