@@ -8,22 +8,25 @@ BASE_HEADERS = {'Content-Type': 'application/json',
 
 class PyClient(object):
 
-    def __init__(self, app_key, rest_base_url):
+    def __init__(self, app_key, rest_base_url,
+                 client_id, client_secret):
         self.app_key = app_key
-        self.client_id = ''
-        self.client_secret = ''
+        self.client_id = client_id
+        self.client_secret = client_secret
+
+        if rest_base_url.endswith('/'):
+            rest_base_url = rest_base_url[:(len(rest_base_url) - 1)]
+        self.rest_base_url = rest_base_url + '/' + app_key.replace('#', '/', 1)
+
         self.admin_token = ''
         self.username = ''
         self.password = ''
         self.token = ''
-        self.rest_base_url = rest_base_url
         self.rest_token = ''
         self.admin_rest_token = ''
 
-        print('EMPyClient init')
-
-    def __del__(self):
-        print('EMPyClient del')
+        if len(self.client_id) and len(self.client_secret):
+            self.get_admin_token(client_id, client_secret)
 
     def create_new_user(self, username, password):
         if len(username) == 0 or len(password) == 0:
@@ -72,8 +75,8 @@ class PyClient(object):
 
     def get_contacts(self):
         if len(self.token) == 0:
-            print('请先进行第1项:获取token')
-            return ''
+            print('请先进行获取token操作')
+            return None
 
         url = self.rest_base_url + '/users/' + self.username + '/contacts/users'
         headers = {'Authorization': self.rest_token}
@@ -83,12 +86,12 @@ class PyClient(object):
             contacts = response.data['data']
             return contacts
 
-        return ''
+        return None
 
     def get_black_contacts(self):
         if len(self.token) == 0:
             print('请先进行获取token操作')
-            return ''
+            return None
 
         url = self.rest_base_url + '/users/' + self.username + '/blocks/users'
         headers = {'Authorization': self.rest_token}
@@ -98,16 +101,16 @@ class PyClient(object):
             blacks = response.data['data']
             return blacks
 
-        return ''
+        return None
 
     def __option_contacts(self, method, username, body=None):
         if len(self.token) == 0:
             print('请先进行获取token操作')
-            return 0
+            return None
 
         if len(username) == 0:
             print('用户名为空')
-            return 0
+            return None
 
         url = self.rest_base_url + '/users/' + self.username + '/contacts/users/' + username
         headers = {'Authorization': self.rest_token}
@@ -341,3 +344,5 @@ class PyClient(object):
         headers.update(BASE_HEADERS)
         response = dxrequest.delete(url, headers, None)
         return response.code
+
+    # def send_message_apns(self, to, alert):
