@@ -345,4 +345,19 @@ class PyClient(object):
         response = dxrequest.delete(url, headers, None)
         return response.code
 
-    # def send_message_apns(self, to, alert):
+    def send_message_apns(self, to, alert='推送内容'):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return -1
+        if len(to) == 0:
+            print('参数为空')
+            return -1
+
+        url = self.rest_base_url + '/notifications'
+        headers = {'Authorization': self.rest_token}
+        headers.update(BASE_HEADERS)
+
+        body = {'chat_type': 'chat', 'to': to, 'alert': alert}
+        response = dxrequest.post(url, headers, body)
+
+        return response.code

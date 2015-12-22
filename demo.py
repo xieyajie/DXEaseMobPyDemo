@@ -116,10 +116,10 @@ class Demo:
             group_id = input('群组ID:')
             username = input('要移出群组黑名单的username:')
             self.client.remove_user_from_group_block(group_id, username)
-        # elif op == 22:
-        #     reciver = input('to: ')
-        #     alert = input('显示内容: ')
-            # self.client
+        elif op == 22:
+            to = input('to: ')
+            alert = input('显示内容: ')
+            self.client.send_message_apns(to, alert)
         # elif op == 23:
         #     reciver = input('接收者username:')
         #     text = input('文字:')
