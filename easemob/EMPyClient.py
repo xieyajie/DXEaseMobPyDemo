@@ -19,15 +19,15 @@ class EMPyClient(object):
 
     def createNewUser(self, aUsername, aPassword):
         if len(aUsername) == 0 or len(aPassword) == 0:
-            return 0
+            return None
 
         url = self.restBaseUrl + '/users'
         body = {'username': aUsername, 'password': aPassword}
-        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'PUT')
+        response = DXRequest.put(url, BASE_HEADERS, body)
         if response.code != 0:
             print('\n Create %s failed:%s' %(aUsername, response.data))
 
-        return response.code
+        return response
 
 
     def getUserToken(self, aUsername, aPassword):
@@ -36,7 +36,7 @@ class EMPyClient(object):
 
         url = self.restBaseUrl + '/token'
         body = {'grant_type': 'password', 'username': aUsername, 'password': aPassword}
-        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'POST')
+        response = DXRequest.post(url, BASE_HEADERS, body)
         if response.code == 0:
             self.username = aUsername
             self.password = aPassword
@@ -56,7 +56,7 @@ class EMPyClient(object):
         body = {'grant_type': 'client_credentials',
                 'client_id': aID,
                 'client_secret': aSecret}
-        response = DXRequest.httpRequest(url, BASE_HEADERS, body, 'POST')
+        response = DXRequest.post(url, BASE_HEADERS, body)
         if response.code == 0:
             self.clientId = aID
             self.clientSecret = aSecret
@@ -76,7 +76,7 @@ class EMPyClient(object):
         url = self.restBaseUrl + '/users/' + self.username + '/contacts/users'
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'GET')
+        response = DXRequest.get(url, headers, None)
         if response.code == 0:
             contacts = response.data['data']
             return contacts
@@ -92,7 +92,7 @@ class EMPyClient(object):
         url = self.restBaseUrl + '/users/' + self.username + '/blocks/users'
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'GET')
+        response = DXRequest.get(url, headers, None)
         if response.code == 0:
             blacks = response.data['data']
             return blacks
@@ -140,7 +140,7 @@ class EMPyClient(object):
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
         body = dict({'usernames': [aUsername]})
-        response = DXRequest.httpRequest(url, headers, body, 'POST')
+        response = DXRequest.post(url, headers, body)
 
         if response.code != 0:
             print('block user failed:%s' %(response.data))
@@ -158,7 +158,7 @@ class EMPyClient(object):
         url = self.restBaseUrl + '/users/' + self.username + '/blocks/users/' + aUsername
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'DELETE')
+        response = DXRequest.delete(url, headers, None)
 
         if response.code != 0:
             print('unblock user failed:%s' %(response.data))
@@ -174,6 +174,10 @@ class EMPyClient(object):
             print('请先进行获取token操作')
             return 0
 
+        if len(aSubject) == 0:
+            print('群主题为空')
+            return 0
+
         url = self.restBaseUrl + '/chatgroups'
         headers = dict({'Authorization': self.adminRestToken})
         headers.update(BASE_HEADERS)
@@ -187,7 +191,7 @@ class EMPyClient(object):
         if aMembers != None and len(aMembers):
             body.update({'members':aMembers})
 
-        response = DXRequest.httpRequest(url, headers, body, 'POST')
+        response = DXRequest.post(url, headers, body)
 
         if response.code != 0:
             print('create group failed:%s' %(response.data))
@@ -196,16 +200,16 @@ class EMPyClient(object):
     def exitGroup(self, aGroupId):
         if len(self.token) == 0:
             print('请先进行获取token操作')
-            return 0
+            return None
 
         if len(aGroupId) == 0:
             print('群组ID为空')
-            return 0
+            return None
 
         url = self.restBaseUrl + '/chatgroups/' + aGroupId
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'DELETE')
+        response = DXRequest.delete(url, headers, None)
 
         if response.code != 0:
             print('delete group failed:%s' %(response.data))
@@ -219,12 +223,12 @@ class EMPyClient(object):
         url = self.restBaseUrl + '/users/' + self.username + '/joined_chatgroups'
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'GET')
+        response = DXRequest.get(url, headers, None)
         groups = response.data['data']
 
         if response.code != 0:
             print('get groups failed:%s' %(response.data))
-        return response.code
+        return groups
 
     def getGroupInfo(self, aGroupId):
         if len(self.token) == 0:
@@ -238,9 +242,146 @@ class EMPyClient(object):
         url = self.restBaseUrl + '/chatgroups/' + aGroupId
         headers = dict({'Authorization': self.restToken})
         headers.update(BASE_HEADERS)
-        response = DXRequest.httpRequest(url, headers, None, 'GET')
-        groups = response.data['data']
+        response = DXRequest.get(url, headers, None)
 
         if response.code != 0:
             print('get group info failed:%s' %(response.data))
-        return response.code
+        return response.data['data']
+
+    def editGroupInfo(self, aGroupId, aSubject = None, aDescribe = None, aMaxUsers = -1):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+
+        if len(aGroupId) == 0:
+            print('群组ID为空')
+            return None
+
+        if aSubject == None and aDescribe == None and aMaxUsers == -1:
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+
+        body = {}
+        if aSubject != None:
+            body.update({'groupname':aSubject})
+        if aDescribe != None:
+            body.update({'description':aDescribe})
+        if aMaxUsers > 0:
+            body.update({'maxusers':aMaxUsers})
+
+        response = DXRequest.put(url, headers, body)
+
+        if response.code != 0:
+            print('edit group info failed:%s' %(response.data))
+        return response.data['data']
+
+    def getGroupMembers(self, aGroupId):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0:
+            print('群组ID为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/users'
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+        response = DXRequest.get(url, headers, None)
+
+        if response.code != 0:
+            print('get group members failed:%s' %(response.data))
+        return response.data['data']
+
+    def addGroupMember(self, aGroupId, aUsername):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0 or len(aUsername) == 0:
+            print('参数为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/users'
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+
+        body = dict({'usernames':[aUsername]})
+        response = DXRequest.post(url, headers, body)
+
+        if response.code != 0:
+            print('add group member failed:%s' %(response.data))
+        return response.data['data']
+
+    def deleteGroupMember(self, aGroupId, aUsername):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0 or len(aUsername) == 0:
+            print('参数为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/users/' + aUsername
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+        response = DXRequest.delete(url, headers, None)
+
+        if response.code != 0:
+            print('add group member failed:%s' %(response.data))
+        return response.data['data']
+
+    def getGroupBlacks(self, aGroupId):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0:
+            print('群组ID为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/blocks/users'
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+        response = DXRequest.get(url, headers, None)
+
+        if response.code != 0:
+            print('get group blocks failed:%s' %(response.data))
+        return response.data['data']
+
+    def addUserToGroupBlock(self, aGroupId, aUsername):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0 or len(aUsername) == 0:
+            print('参数为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/blocks/users'
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+
+        body = dict({'usernames':[aUsername]})
+        response = DXRequest.post(url, headers, body)
+
+        if response.code != 0:
+            print('add group block failed:%s' %(response.data))
+        return response.data['data']
+
+    def removeUserFromGroupBlock(self, aGroupId, aUsername):
+        if len(self.token) == 0:
+            print('请先进行获取token操作')
+            return None
+        if len(aGroupId) == 0 or len(aUsername) == 0:
+            print('参数为空')
+            return None
+
+        url = self.restBaseUrl + '/chatgroups/' + aGroupId + '/blocks/users/' + aUsername
+        headers = dict({'Authorization': self.restToken})
+        headers.update(BASE_HEADERS)
+        response = DXRequest.delete(url, headers, None)
+
+        if response.code != 0:
+            print('remove group block failed:%s' %(response.data))
+        return response.data['data']
+
+

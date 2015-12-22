@@ -76,11 +76,47 @@ class Demo:
         elif op == 12:
             groupId = input('要退出的群组ID:')
             self.client_.exitGroup(groupId)
-        # elif op == 13:
-        # elif op == 14:
-        # elif op == 15:
-        # elif op == 16:
+        elif op == 13:
+            groupId = input('群组ID:')
 
+            subject = input('群主题:')
+            if len(subject) == 0:
+                subject = None
+
+            des = input('群描述:')
+            if len(des) == 0:
+                des = None
+
+            maxUsers = -1
+            tmp = input('最大群人数(默认不修改):')
+            if len(tmp):
+                maxUsers = int(tmp)
+
+            self.client_.editGroupInfo(groupId, subject, des, maxUsers)
+        elif op == 14:
+            groupId = input('群组ID:')
+            self.client_.getGroupMembers(groupId)
+        elif op == 15:
+            groupId = input('群组ID:')
+            username = input('要添加成员username:')
+            self.client_.addGroupMember(groupId, username)
+        elif op == 16:
+            groupId = input('群组ID:')
+            username = input('要删除成员username:')
+            self.client_.deleteGroupMember(groupId, username)
+        elif op == 17:
+            groupId = input('群组ID:')
+            self.client_.getGroupBlacks(groupId)
+        elif op == 18:
+            groupId = input('群组ID:')
+            username = input('要加入群组黑名单的username:')
+            self.client_.addUserToGroupBlock(groupId, username)
+        elif op == 19:
+            groupId = input('群组ID:')
+            username = input('要移出群组黑名单的username:')
+            self.client_.removeUserFromGroupBlock(groupId, username)
+        elif op == 20:
+        elif op == 21:
 
 
 
@@ -128,11 +164,15 @@ class Demo:
                        '将用户移出黑名单',
                        '获取当前用户的所有群组',
                        '创建群组',
-                       '退出群组(owner退出群组销毁)'
+                       '退出群组(owner退出群组销毁)',
                        '获取群组详情',
                        '修改群组详情',
+                       '获取群成员',
                        '添加群成员',
-                       '删除群成员(必须是owner)'
+                       '删除群成员(必须是owner)',
+                       '获取群组黑名单',
+                       '将用户加入群组黑名单',
+                       '将用户移出群组黑名单',
                        '发送单聊消息',
                        '发送群聊消息',]
             op = self.showOptions(options)
