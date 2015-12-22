@@ -1,8 +1,5 @@
-#coding = 'utf-8'
+# coding = 'utf-8'
 
-__author__ = 'xieyajie'
-
-import io
 from easemob.emclient import *
 
 DEFAULT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
@@ -10,9 +7,13 @@ DEFAULT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
 DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
 DEFAULT_REST = 'https://a1.easemob.com'
 
+
 class Demo:
 
-    def taskOptions(self, op):
+    def __init__(self):
+        self.client = None
+
+    def task_options(self, op):
         if op == 1:
             username = input('username:')
             password = input('password:')
@@ -71,7 +72,6 @@ class Demo:
                 if len(tmp):
                     is_approval = bool(tmp)
 
-
             self.client.create_group(subject, des, max_users,
                                      members, is_public, is_approval)
         elif op == 12:
@@ -121,32 +121,27 @@ class Demo:
         # elif op == 22:
         # elif op == 23:
 
-
-
-    def showOptions(self, options):
-        print('\n%s' %('=' * 40))
+    def show_options(self, options):
+        print('\n%s' % ('=' * 40))
         print('输入编号,-1退出\n')
         for i in range(0, len(options)):
             print(str.format('  {0}：{1}', i + 1, options[i]))
-        print('\n%s' %('=' * 40))
+        print('\n%s' % ('=' * 40))
 
-        try:
-            op = int(input())
-            if op <= len(options):
-                return op
-        except:
-            pass
+        op = int(input())
+        if op <= len(options):
+            return op
 
-        return self.showOptions(options)
+        return self.show_options(options)
 
     def main(self):
         print('\n这里是环信python demo\n')
 
-        appkey = input('appkey(%s):' %(DEFAULT_APPKEY))
+        appkey = input('appkey(%s):' % DEFAULT_APPKEY)
         if len(appkey) == 0:
             appkey = DEFAULT_APPKEY
 
-        rest = input('rest(%s):' %(DEFAULT_REST))
+        rest = input('rest(%s):' % DEFAULT_REST)
         if len(rest) == 0:
             rest = DEFAULT_REST
         if rest.endswith('/'):
@@ -179,10 +174,10 @@ class Demo:
                        '上传语音图片',
                        '下载语音图片'
                        '发送单聊消息',
-                       '发送群聊消息',]
-            op = self.showOptions(options)
+                       '发送群聊消息']
+            op = self.show_options(options)
 
-            self.taskOptions(op)
+            self.task_options(op)
 
         print('main end')
 

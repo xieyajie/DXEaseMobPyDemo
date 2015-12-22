@@ -30,12 +30,12 @@ def http_request(url, headers, parameters, method):
     respdata = None
     try:
         response = urllib.request.urlopen(req)
-    except urllib.error.HTTPError as error:
-        code = error.code
-        des = error.reason
-    except urllib.error.URLError as error:
-        code = error.code
-        des = error.reason
+    except urllib.error.HTTPError as err:
+        code = err.code
+        des = err.reason
+    except urllib.error.URLError as err:
+        code = err.code
+        des = err.reason
     else:
         respdata = response.read().decode('utf-8')
         print(respdata)

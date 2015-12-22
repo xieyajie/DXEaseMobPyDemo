@@ -10,7 +10,16 @@ class PyClient(object):
 
     def __init__(self, app_key, rest_base_url):
         self.app_key = app_key
+        self.client_id = ''
+        self.client_secret = ''
+        self.admin_token = ''
+        self.username = ''
+        self.password = ''
+        self.token = ''
         self.rest_base_url = rest_base_url
+        self.rest_token = ''
+        self.admin_rest_token = ''
+
         print('EMPyClient init')
 
     def __del__(self):
@@ -103,15 +112,15 @@ class PyClient(object):
         url = self.rest_base_url + '/users/' + self.username + '/contacts/users/' + username
         headers = {'Authorization': self.rest_token}
         headers.update(BASE_HEADERS)
-        response = dxrequest.httpRequest(url, headers, body, method)
+        response = dxrequest.http_request(url, headers, body, method)
         return response
 
     def add_user(self, username):
-        response = self.optionContacts('POST', username, {'username':username})
+        response = self.__option_contacts('POST', username, {'username': username})
         return response.code
 
     def delete_user(self, username):
-        response = self.optionContacts('DELETE', username)
+        response = self.__option_contacts('DELETE', username)
         return response.code
 
     def add_user_to_black(self, username):
