@@ -3,7 +3,7 @@
 __author__ = 'xieyajie'
 
 import io
-from easemob.EMPyClient import *
+from easemob.em_client import *
 
 DEFAULT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
 DEFAULT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
@@ -16,11 +16,11 @@ class Demo:
         if op == 1:
             username = input('username:')
             password = input('password:')
-            self.client_.createNewUser(username, password)
+            self.client_.create_new_user(username, password)
         elif op == 2:
             username = input('username:')
             password = input('password:')
-            self.client_.getUserToken(username, password)
+            self.client_.get_user_token(username, password)
         elif op == 3:
             id = input('client_id:')
             if len(id) == 0:
@@ -30,54 +30,54 @@ class Demo:
             if len(secret) == 0:
                 secret = DEFAULT_SECRET
 
-            self.client_.getAdminToken(id, secret)
+            self.client_.get_admin_token(id, secret)
         elif op == 4:
-            self.client_.getContacts()
+            self.client_.get_contacts()
         elif op == 5:
-            self.client_.getBlackContacts()
+            self.client_.get_black_contacts()
         elif op == 6:
             username = input('username:')
-            self.client_.addUser(username)
+            self.client_.add_user(username)
         elif op == 7:
             username = input('username:')
-            self.client_.deleteUser(username)
+            self.client_.delete_user(username)
         elif op == 8:
             username = input('username:')
-            self.client_.addUserToBlack(username)
+            self.client_.add_user_to_black(username)
         elif op == 9:
             username = input('username:')
-            self.client_.removeUserFromBlack(username)
+            self.client_.remove_user_from_black(username)
         elif op == 10:
-            self.client_.getCurrentUserGroups()
+            self.client_.get_current_user_groups()
         elif op == 11:
             subject = input('群主题:')
             des = input('群描述:')
 
-            maxUsers = 300
+            max_users = 300
             tmp = input('最大群人数(默认300):')
             if len(tmp):
-                maxUsers = int(tmp)
+                max_users = int(tmp)
 
             members = input('群成员:')
 
-            isPublic = True
+            is_public = True
             tmp = input('是否是公开群(1是,0否):')
             if len(tmp):
-                isPublic = bool(tmp)
+                is_public = bool(tmp)
 
-            isApproval = True
-            if isPublic == 1:
+            is_approval = True
+            if is_public == 1:
                 tmp = input('进群是否需要群主同意(1是,0否):')
                 if len(tmp):
-                    isApproval = bool(tmp)
+                    is_approval = bool(tmp)
 
 
-            self.client_.createGroup(subject, des, maxUsers, members, isPublic, isApproval)
+            self.client_.create_group(subject, des, max_users, members, is_public, is_approval)
         elif op == 12:
-            groupId = input('要退出的群组ID:')
-            self.client_.exitGroup(groupId)
+            group_id = input('要退出的群组ID:')
+            self.client_.exit_group(group_id)
         elif op == 13:
-            groupId = input('群组ID:')
+            group_id = input('群组ID:')
 
             subject = input('群主题:')
             if len(subject) == 0:
@@ -87,36 +87,38 @@ class Demo:
             if len(des) == 0:
                 des = None
 
-            maxUsers = -1
+            max_users = -1
             tmp = input('最大群人数(默认不修改):')
             if len(tmp):
-                maxUsers = int(tmp)
+                max_users = int(tmp)
 
-            self.client_.editGroupInfo(groupId, subject, des, maxUsers)
+            self.client_.edit_group_info(group_id, subject, des, max_users)
         elif op == 14:
-            groupId = input('群组ID:')
-            self.client_.getGroupMembers(groupId)
+            group_id = input('群组ID:')
+            self.client_.get_group_members(group_id)
         elif op == 15:
-            groupId = input('群组ID:')
+            group_id = input('群组ID:')
             username = input('要添加成员username:')
-            self.client_.addGroupMember(groupId, username)
+            self.client_.add_group_member(group_id, username)
         elif op == 16:
-            groupId = input('群组ID:')
+            group_id = input('群组ID:')
             username = input('要删除成员username:')
-            self.client_.deleteGroupMember(groupId, username)
+            self.client_.delete_group_member(group_id, username)
         elif op == 17:
-            groupId = input('群组ID:')
-            self.client_.getGroupBlacks(groupId)
+            group_id = input('群组ID:')
+            self.client_.get_group_blacks(group_id)
         elif op == 18:
-            groupId = input('群组ID:')
+            group_id = input('群组ID:')
             username = input('要加入群组黑名单的username:')
-            self.client_.addUserToGroupBlock(groupId, username)
+            self.client_.add_user_to_group_block(group_id, username)
         elif op == 19:
-            groupId = input('群组ID:')
+            group_id = input('群组ID:')
             username = input('要移出群组黑名单的username:')
-            self.client_.removeUserFromGroupBlock(groupId, username)
-        elif op == 20:
-        elif op == 21:
+            self.client_.remove_user_from_group_block(group_id, username)
+        # elif op == 20:
+        # elif op == 21:
+        # elif op == 22:
+        # elif op == 23:
 
 
 
@@ -149,7 +151,7 @@ class Demo:
         if rest.endswith('/'):
             rest = rest[:(len(rest) - 1)]
 
-        self.client_ = EMPyClient(appkey, rest + '/' + appkey.replace('#', '/', 1))
+        self.client_ = PyClient(appkey, rest + '/' + appkey.replace('#', '/', 1))
 
         op = 1
         while op:
@@ -173,6 +175,8 @@ class Demo:
                        '获取群组黑名单',
                        '将用户加入群组黑名单',
                        '将用户移出群组黑名单',
+                       '上传语音图片',
+                       '下载语音图片'
                        '发送单聊消息',
                        '发送群聊消息',]
             op = self.showOptions(options)
