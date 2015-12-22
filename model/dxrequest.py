@@ -34,7 +34,7 @@ def http_request(url, headers, parameters, method):
         code = err.code
         des = err.reason
     except urllib.error.URLError as err:
-        code = err.code
+        code = -1
         des = err.reason
     else:
         respdata = response.read().decode('utf-8')
