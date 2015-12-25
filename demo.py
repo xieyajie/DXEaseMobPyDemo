@@ -24,6 +24,12 @@ class Demo:
                 secret = DEFAULT_CLIENT_SECRET
 
             self.client.get_admin_token(client_id, secret)
+        elif op == 2:
+            username = input('username:')
+            self.client.delete_user(username)
+        elif op == 3:
+            username = input('username:')
+            self.client.make_user_offline(username)
         elif op == 4:
             username = input('username:')
             password = input('password:')
@@ -41,7 +47,7 @@ class Demo:
             self.client.add_user(username)
         elif op == 9:
             username = input('username:')
-            self.client.delete_user(username)
+            self.client.delete_contact(username)
         elif op == 10:
             username = input('username:')
             self.client.add_user_to_black(username)

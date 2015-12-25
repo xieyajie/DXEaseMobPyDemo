@@ -28,6 +28,47 @@ class PyClient(object):
         if len(self.client_id) and len(self.client_secret):
             self.get_admin_token(client_id, client_secret)
 
+    def get_admin_token(self, client_id, client_secret):
+        if len(client_id) == 0 or len(client_secret) == 0:
+            print('client_id or client_secret is empty')
+            return ''
+
+        url = self.rest_base_url + '/token'
+        body = {'grant_type': 'client_credentials',
+                'client_id': client_id,
+                'client_secret': client_secret}
+        response = dxrequest.post(url, BASE_HEADERS, body)
+        if response.code == 0:
+            self.client_id = client_id
+            self.client_secret = client_secret
+            self.admin_token = response.data['access_token']
+            self.admin_rest_token = 'Bearer ' + self.admin_token
+            return self.admin_token
+
+        return ''
+
+    def delete_user(self, username):
+        if len(self.admin_token) == 0 or len(self.username) == 0:
+            return -1
+
+        url = self.rest_base_url + '/users/' + username
+        headers = {'Authorization': self.admin_rest_token}
+        headers.update(BASE_HEADERS)
+        response = dxrequest.delete(url, BASE_HEADERS, None)
+
+        return response.code
+
+    def make_user_offline(self, username):
+        if len(self.admin_token) == 0 or len(self.username) == 0:
+            return -1
+
+        url = self.rest_base_url + '/users/' + username + '/disconnect'
+        headers = {'Authorization': self.admin_rest_token}
+        headers.update(BASE_HEADERS)
+        response = dxrequest.delete(url, BASE_HEADERS, None)
+
+        return response.code
+
     def create_new_user(self, username, password):
         if len(username) == 0 or len(password) == 0:
             return None
@@ -51,25 +92,6 @@ class PyClient(object):
             self.token = response.data['access_token']
             self.rest_token = 'Bearer ' + self.token
             return self.token
-
-        return ''
-
-    def get_admin_token(self, client_id, client_secret):
-        if len(client_id) == 0 or len(client_secret) == 0:
-            print('client_id or client_secret is empty')
-            return ''
-
-        url = self.rest_base_url + '/token'
-        body = {'grant_type': 'client_credentials',
-                'client_id': client_id,
-                'client_secret': client_secret}
-        response = dxrequest.post(url, BASE_HEADERS, body)
-        if response.code == 0:
-            self.client_id = client_id
-            self.client_secret = client_secret
-            self.admin_token = response.data['access_token']
-            self.admin_rest_token = 'Bearer ' + self.admin_token
-            return self.admin_token
 
         return ''
 
@@ -122,7 +144,7 @@ class PyClient(object):
         response = self.__option_contacts('POST', username, {'username': username})
         return response.code
 
-    def delete_user(self, username):
+    def delete_contact(self, username):
         response = self.__option_contacts('DELETE', username)
         return response.code
 
