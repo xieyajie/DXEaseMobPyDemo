@@ -33,7 +33,7 @@ class PyClient(object):
             print('client_id or client_secret is empty')
             return ''
 
-        url = self.rest_base_url + '/token'
+        url = "https://a1.easemob.com/"+ self.app_key.replace('#', '/', 1) + '/token'
         body = {'grant_type': 'client_credentials',
                 'client_id': client_id,
                 'client_secret': client_secret}
@@ -43,6 +43,8 @@ class PyClient(object):
             self.client_secret = client_secret
             self.admin_token = response.data['access_token']
             self.admin_rest_token = 'Bearer ' + self.admin_token
+            print(self.admin_token)
+
             return self.admin_token
 
         return ''

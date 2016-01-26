@@ -1,16 +1,6 @@
 # DXEaseMobPyDemo
 Python 封装 环信rest接口
 
-需要替换demo.py中的4个宏定义
-
-DEFAULT_CLIENT_ID = ''
-
-DEFAULT_CLIENT_SECRET = ''
-
-DEFAULT_APPKEY = ''
-
-DEFAULT_REST = ''
-
 提供功能如下：
   1. 获取管理员权限(标注管理员的都必须先进行1)
   2. 删除用户(管理员)
@@ -38,3 +28,21 @@ DEFAULT_REST = ''
   24. 发送文字消息(管理员)
   25. 上传图片
   26. 下载图片
+
+# 使用说明
+
+###替换demo.py中的4个宏定义
+
+DEFAULT_CLIENT_ID: app的client_id
+
+DEFAULT_CLIENT_SECRET: app的client_secret
+
+DEFAULT_APPKEY: appkey
+
+DEFAULT_REST: rest地址
+
+### 运行
+命令行输入 
+
+	$python3 demo.py
+
