@@ -1,6 +1,6 @@
 # coding = 'utf-8'
 
-from model import dxrequest
+from utils import dxrequest
 
 BASE_HEADERS = {'Content-Type': 'application/json',
                 'Accept': 'application/json'}
@@ -367,7 +367,7 @@ class PyClient(object):
         response = dxrequest.delete(url, headers, None)
         return response.code
 
-    def send_message_apns(self, to, alert='推送内容'):
+    def send_message_apns(self, to, content='推送内容'):
         if len(self.token) == 0:
             print('请先进行获取token操作')
             return -1
@@ -376,10 +376,44 @@ class PyClient(object):
             return -1
 
         url = self.rest_base_url + '/notifications'
-        headers = {'Authorization': self.rest_token}
+        headers = {'Authorization': self.admin_rest_token}
         headers.update(BASE_HEADERS)
 
-        body = {'chat_type': 'chat', 'to': to, 'alert': alert}
+        body = {'chat_type': 'chat', 'to': to, 'alert': content}
         response = dxrequest.post(url, headers, body)
+        print(response.data)
 
         return response.code
+
+    def send_text_message(self, to, content, mtype):
+        target_type = "users"
+        if mtype == 1:
+            target_type = "chatgroups"
+        elif mtype == 2:
+            target_type = "chatrooms"
+
+        target = [to]
+        msg = {'type': 'txt', 'msg': content}
+        ext = {}
+
+        url = self.rest_base_url + '/messages'
+        headers = {'Authorization': self.admin_rest_token}
+        headers.update(BASE_HEADERS)
+
+        body = {'target_type': target_type,
+                'target': target,
+                'from': self.username,
+                'msg': msg,
+                'ext': ext}
+        response = dxrequest.post(url, headers, body)
+        print(response.data)
+
+        return response.code
+
+    def upload_image(self, image_path):
+        url = self.rest_base_url + '/chatfiles'
+
+        headers = {'Authorization': self.admin_rest_token, 'restrict-access': True}
+        dxrequest.upload_file(url, image_path, headers)
+
+

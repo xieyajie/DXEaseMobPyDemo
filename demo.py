@@ -1,14 +1,15 @@
-# coding = 'utf-8'
+# coding = utf-8
 
 from easemob.emclient import *
 
-#DEFAULT_CLIENT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
-#DEFAULT_CLIENT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
-#DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
+DEFAULT_CLIENT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
+DEFAULT_CLIENT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
+DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
 
-DEFAULT_CLIENT_ID = 'YXA6HhejgH66EeS7Eon97rvrhQ'
-DEFAULT_CLIENT_SECRET = 'YXA6EAmu-U4iaY8Eq2lkp4p4iDfuvTQ'
-DEFAULT_APPKEY = 'easemob-demo#no1'
+# DEFAULT_CLIENT_ID = 'YXA6HhejgH66EeS7Eon97rvrhQ'
+# DEFAULT_CLIENT_SECRET = 'YXA6EAmu-U4iaY8Eq2lkp4p4iDfuvTQ'
+# DEFAULT_APPKEY = 'easemob-demo#no1'
+
 DEFAULT_REST = 'https://a1.easemob.com'
 
 
@@ -88,6 +89,9 @@ class Demo:
             group_id = input('要退出的群组ID:')
             self.client.exit_group(group_id)
         elif op == 15:
+            group_id = input('要查询的群组ID:')
+            self.client.get_group_info(group_id)
+        elif op == 16:
             group_id = input('群组ID:')
 
             subject = input('群主题:')
@@ -104,44 +108,48 @@ class Demo:
                 max_users = int(tmp)
 
             self.client.edit_group_info(group_id, subject, des, max_users)
-        elif op == 16:
+        elif op == 17:
             group_id = input('群组ID:')
             self.client.get_group_members(group_id)
-        elif op == 17:
+        elif op == 18:
             group_id = input('群组ID:')
             username = input('要添加成员username:')
             self.client.add_group_member(group_id, username)
-        elif op == 18:
+        elif op == 19:
             group_id = input('群组ID:')
             username = input('要删除成员username:')
             self.client.delete_group_member(group_id, username)
-        elif op == 19:
+        elif op == 20:
             group_id = input('群组ID:')
             self.client.get_group_blacks(group_id)
-        elif op == 20:
+        elif op == 21:
             group_id = input('群组ID:')
             username = input('要加入群组黑名单的username:')
             self.client.add_user_to_group_block(group_id, username)
-        elif op == 21:
+        elif op == 22:
             group_id = input('群组ID:')
             username = input('要移出群组黑名单的username:')
             self.client.remove_user_from_group_block(group_id, username)
-        elif op == 22:
-            to = input('to: ')
-            alert = input('显示内容: ')
-            self.client.send_message_apns(to, alert)
-        # elif op == 23:
-        #     reciver = input('接收者username:')
-        #     text = input('文字:')
-        #     ext = input('扩展({\'key\': \'value\', \'key\': \'value\'}):')
-        # elif op == 24:
-        # elif op == 25:
+        elif op == 23:
+            to = input('接收者: ')
+            content = input('显示内容: ')
+            self.client.send_message_apns(to, content)
+        elif op == 24:
+            reciver = input('接收者:')
+            text = input('文字:')
+            mtype = input('单聊->0, 群聊->1, 聊天室->2:')
+#             ext = input('扩展({\'key\': \'value\', \'key\': \'value\'}):')
+            self.client.send_text_message(reciver, text, int(mtype))
+        elif op == 25:
+            image_path = input('图片路径:')
+            self.client.upload_image(image_path)
+        # elif op == 26:
 
     def show_options(self, options):
         print('\n%s' % ('=' * 40))
         print('输入编号,-1返回上一级\n')
         for i in range(0, len(options)):
-            print(str.format('  {0}：{1}', i + 1, options[i]))
+            print(str.format('  {0}', options[i]))
         print('\n%s' % ('=' * 40))
 
         op = int(input())
@@ -176,33 +184,32 @@ class Demo:
 
         self.init_client()
 
-        options = ['获取管理员权限',
-                   '删除用户(管理员)',
-                   '强制用户下线(管理员)',
-                   '创建新用户',
-                   '获取用户token',
-                   '获取好友',
-                   '获取好友黑名单',
-                   '添加好友',
-                   '删除好友',
-                   '将用户加入黑名单',
-                   '将用户移出黑名单',
-                   '获取当前用户的所有群组',
-                   '创建群组',
-                   '退出群组(owner退出群组销毁)',
-                   '获取群组详情',
-                   '修改群组详情',
-                   '获取群成员',
-                   '添加群成员',
-                   '删除群成员(必须是owner)',
-                   '获取群组黑名单',
-                   '将用户加入群组黑名单',
-                   '将用户移出群组黑名单',
-                   '推送消息Apns',
-                   '发送单聊文字消息',
-                   '发送群聊文字消息',
-                   '上传语音图片',
-                   '下载语音图片']
+        options = ['1. 获取管理员权限(标注管理员的都必须先进行1)',
+                   '2. 删除用户(管理员)',
+                   '3. 强制用户下线(管理员)',
+                   '4. 创建新用户',
+                   '5. 获取用户token(以下操作必须先进行5)',
+                   '6. 获取好友列表',
+                   '7. 获取好友黑名单列表',
+                   '8. 添加好友',
+                   '9. 删除好友',
+                   '10. 将用户加入黑名单',
+                   '11. 将用户移出黑名单',
+                   '12. 获取当前用户的所有群组',
+                   '13. 创建群组',
+                   '14. 退出群组(owner退出群组销毁)',
+                   '15. 获取群组详情',
+                   '16. 修改群组详情',
+                   '17. 获取群成员',
+                   '18. 添加群成员',
+                   '19. 删除群成员(必须是owner)',
+                   '20. 获取群组黑名单',
+                   '21. 将用户加入群组黑名单',
+                   '22. 将用户移出群组黑名单',
+                   '23. 推送消息Apns(管理员)',
+                   '24. 发送文字消息(管理员)',
+                   '25. 上传图片',
+                   '26. 下载图片']
 
         op = 1
         while op:
