@@ -2,9 +2,13 @@
 Python 封装 环信rest接口
 
 需要替换demo.py中的4个宏定义
+
 DEFAULT_CLIENT_ID = ''
+
 DEFAULT_CLIENT_SECRET = ''
+
 DEFAULT_APPKEY = ''
+
 DEFAULT_REST = ''
 
 提供功能如下：
@@ -12,7 +16,7 @@ DEFAULT_REST = ''
   2. 删除用户(管理员)
   3. 强制用户下线(管理员)
   4. 创建新用户
-  5. 获取用户token(以下操作必须先进行5)
+  5. 获取用户token(没标注管理员的操作必须先进行5)
   6. 获取好友列表
   7. 获取好友黑名单列表
   8. 添加好友
