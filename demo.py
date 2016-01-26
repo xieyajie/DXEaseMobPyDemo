@@ -2,16 +2,15 @@
 
 from easemob.emclient import *
 
-DEFAULT_CLIENT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
-DEFAULT_CLIENT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
-DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
+# DEFAULT_CLIENT_ID = 'YXA6TX5LoNxKEeOQ1eH_uqza9Q'
+# DEFAULT_CLIENT_SECRET = 'YXA6IGRmXvNxlDIy2QxeMzaimIE5IeI'
+# DEFAULT_APPKEY = 'easemob-demo#chatdemoui'
+# DEFAULT_REST = 'https://a1.easemob.com'
 
-# DEFAULT_CLIENT_ID = 'YXA6HhejgH66EeS7Eon97rvrhQ'
-# DEFAULT_CLIENT_SECRET = 'YXA6EAmu-U4iaY8Eq2lkp4p4iDfuvTQ'
-# DEFAULT_APPKEY = 'easemob-demo#no1'
-
-DEFAULT_REST = 'https://a1.easemob.com'
-
+DEFAULT_CLIENT_ID = 'YXA6HhejgH66EeS7Eon97rvrhQ'
+DEFAULT_CLIENT_SECRET = 'YXA6EAmu-U4iaY8Eq2lkp4p4iDfuvTQ'
+DEFAULT_APPKEY = 'easemob-demo#no1'
+DEFAULT_REST = 'https://a1.sdb.easemob.com'
 
 class Demo:
 
